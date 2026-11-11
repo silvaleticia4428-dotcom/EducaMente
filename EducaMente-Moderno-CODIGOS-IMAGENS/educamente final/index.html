@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b2d">
+  <meta name="description" content="EducaMente – Aprender Brincando. Plataforma educativa interativa com atividades, conquistas e professor virtual.">
+  <title>EducaMente • Aprender Brincando</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+</head>
+<body>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .catch(erro => console.warn('PWA não registrada:', erro));
+    });
+  }
+</script>
+
+  <!-- Acesso local: demonstração sem servidor e sem autenticação segura. -->
+  <section class="auth-screen" id="authScreen" aria-label="Acesso ao EducaMente">
+    <div class="auth-left">
+      <div class="brand auth-brand"><span class="brand-mark" aria-hidden="true">✦</span><span><strong>Educa<span>Mente</span></strong><small>Aprender Brincando</small></span></div>
+      <div class="auth-story">
+        <span class="eyebrow pill-heading">✦ O SEU MUNDO DE APRENDIZAGEM</span>
+        <h1>Aprender nunca foi tão <em>divertido!</em></h1>
+        <p>Descubra histórias, desafios, matemática e um professor virtual preparado para te ajudar a aprender brincando.</p>
+        <img src="imagens/professor-robot.png" class="auth-robot" alt="Robô professor azul e roxo segurando um livro">
+        <div class="auth-float auth-float-a">✦ +10 pontos</div>
+        <div class="auth-float auth-float-b">★ Novas conquistas</div>
+      </div>
+      <p class="auth-legal">Feito para despertar a curiosidade 💜</p>
+    </div>
+    <div class="auth-right">
+      <div class="auth-panel">
+        <span class="auth-overline">BEM-VINDO(A) AO EDUCAMENTE</span>
+        <h2 id="authHeading">Que bom ter você aqui! 👋</h2>
+        <p class="muted" id="authSubheading">Entre no seu perfil e continue sua aventura.</p>
+        <div class="auth-tabs" role="group" aria-label="Entrar ou cadastrar">
+          <button class="auth-tab active" data-auth="login" type="button">Entrar</button>
+          <button class="auth-tab" data-auth="cadastro" type="button">Criar cadastro</button>
+        </div>
+        <form id="authForm" novalidate>
+          <div class="auth-register-only" id="registerOnly" hidden>
+            <label class="field-label" for="registerName">Seu nome</label>
+            <input id="registerName" maxlength="48" placeholder="Como podemos chamar você?" autocomplete="name">
+            <label class="field-label" for="registerRole">Quero participar como</label>
+            <select id="registerRole"><option value="aluno">Aluno(a)</option><option value="professor">Professor(a)</option></select>
+          </div>
+          <label class="field-label" for="authUser">Nome de usuário</label>
+          <input id="authUser" maxlength="25" placeholder="Ex.: maria123" autocomplete="username" required spellcheck="false">
+          <label class="field-label" for="authPassword">Senha de demonstração</label>
+          <div class="password-wrap"><input type="password" id="authPassword" minlength="4" maxlength="60" placeholder="Pelo menos 4 caracteres" autocomplete="current-password" required><button type="button" id="togglePassword" aria-label="Mostrar senha">◉</button></div>
+          <p class="form-error" id="authError" role="alert"></p>
+          <button class="primary-button auth-submit" type="submit" id="authSubmit">Entrar no EducaMente <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="auth-footnote">🔒 Versão local para apresentação. Não use senha real: os perfis ficam apenas neste navegador e não há segurança de servidor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aplicativo: aparece após o acesso local. -->
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span><strong>Educa<span>Mente</span></strong><small>Aprender Brincando</small></span></div>
+      <div class="side-section-title">EXPLORAR</div>
+      <nav id="mainNavigation" aria-label="Páginas do aplicativo"></nav>
+      <div class="sidebar-bottom">
+        <img src="imagens/professor-mini.png" alt="Pequeno professor virtual robô">
+        <strong>Dúvida na atividade?</strong>
+        <p>O professor virtual pode ajudar!</p>
+        <button type="button" class="side-help-button" data-go="tutor">Conversar agora ↗</button>
+      </div>
+      <button type="button" class="logout-button" id="logoutButton">Sair da conta <span aria-hidden="true">↗</span></button>
+    </aside>
+
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="main-column">
+      <header class="topbar">
+        <button type="button" class="hamburger" id="menuButton" aria-label="Abrir menu lateral">☰</button>
+        <form class="global-search" id="searchForm" role="search">
+          <span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Buscar atividades, histórias, jogos..." aria-label="Buscar conteúdos"><button type="submit" aria-label="Buscar">↵</button>
+        </form>
+        <div class="topbar-actions">
+          <button class="notification-button" type="button" id="notificationButton" aria-label="Ver atividades do dia">♧<span></span></button>
+          <button class="points-pill" type="button" data-go="conquistas" id="pointsPill">★ 0 pontos</button>
+          <button class="top-avatar" type="button" data-go="perfil" id="topAvatar" aria-label="Abrir perfil">E</button>
+        </div>
+      </header>
+      <main class="app-main" id="appView" tabindex="-1"></main>
+      <footer class="app-footer">EducaMente • Aprender Brincando • Versão demonstrativa local</footer>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
